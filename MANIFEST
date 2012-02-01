@@ -8,4 +8,5 @@ examples/get_thing.pl
 examples/thing_exists.pl
 lib/WebService/Flattr.pm
 lib/WebService/Flattr/Response.pm
+t/author-search.t
 t/basic.t

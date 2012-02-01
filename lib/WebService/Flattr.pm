@@ -1,6 +1,6 @@
 package WebService::Flattr;
 {
-  $WebService::Flattr::VERSION = '0.50';
+  $WebService::Flattr::VERSION = '0.51';
 }
 
 use strict;
@@ -50,7 +50,14 @@ This returns a C<< Net::Flattr >> object to call L</Request Methods> on.
 sub new {
     my $class = shift;
 
+    my $name = 'WebService::Flattr';
+    if ($WebService::Flattr::VERSION) {
+        $name .= '/'.  $WebService::Flattr::VERSION;
+    }
     my $ua = LWP::UserAgent->new(
+        # the space at the end below makes LWP prepend its name and
+        # version number
+        agent => "${name} ",
         keep_alive => 4,
         max_redirect => 0, # Avoid auto-redirect on thing_exists() success
         protocols_allowed => ['https'],
@@ -80,7 +87,7 @@ sub _req {
 =head2 Request Methods
 
 The following request methods perform actions against Flattr's API.
-Each method returns a L<< WebService::Flattr::Response >> method on
+Each method returns a L<< WebService::Flattr::Response >> object on
 success and dies on failure.
 
 =head3 user_flattrs
@@ -101,14 +108,8 @@ sub user_flattrs {
 
     my $tmpl = "https://api.flattr.com/rest/v2/users/{username}/flattrs";
     my $uri = URI::Template->new($tmpl)->process(username => $arg->{username});
-
-    # TODO: Implement optional params in URI::Template and use that
-    my @optional = qw(
-        count
-        page
-    );
-    foreach (@optional) {
-        defined $arg->{$_} && $uri->query_param($_, $arg->{$_});
+    foreach (keys %$arg) {
+        $uri->query_param($_, $arg->{$_});
     }
 
     return $self->_req($uri);
@@ -166,18 +167,8 @@ sub search_things {
 
     my $tmpl = "https://api.flattr.com/rest/v2/things/search";
     my $uri = URI::Template->new($tmpl)->process;
-    # TODO: Implement optional params in URI::Template and use that
-    my @optional = qw(
-        query
-        tags
-        language
-        category
-        user
-        page
-        count
-    );
-    foreach (@optional) {
-        defined $arg->{$_} && $uri->query_param($_, $arg->{$_});
+    foreach (keys %$arg) {
+        $uri->query_param($_, $arg->{$_});
     }
 
     return $self->_req($uri);
