@@ -10,3 +10,6 @@ lib/WebService/Flattr.pm
 lib/WebService/Flattr/Response.pm
 t/author-search.t
 t/basic.t
+t/release-live_api_calls.t
+t/release-pod-coverage.t
+t/release-pod-syntax.t

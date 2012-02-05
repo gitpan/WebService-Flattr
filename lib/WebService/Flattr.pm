@@ -1,6 +1,6 @@
 package WebService::Flattr;
 {
-  $WebService::Flattr::VERSION = '0.51';
+  $WebService::Flattr::VERSION = '0.52';
 }
 
 use strict;
@@ -15,6 +15,10 @@ use WebService::Flattr::Response ();
 =head1 NAME
 
 WebService::Flattr - An interface to Flattr's social micro-payment API
+
+=head1 VERSION
+
+version 0.52
 
 =head1 SYNOPSIS
 
@@ -92,9 +96,8 @@ success and dies on failure.
 
 =head3 user_flattrs
 
-Takes a list or hash reference containing the following arguments:
-
-username (mandatory), count (optional), page (optional).
+Takes a list or hash reference containing the mandatory I<< username >>
+argument and zero or more optional arguments.
 
 L<<
 http://developers.flattr.net/api/resources/flattrs/#list-a-users-flattrs
@@ -107,6 +110,30 @@ sub user_flattrs {
     my $arg = @_ == 1 ? shift : { @_ };
 
     my $tmpl = "https://api.flattr.com/rest/v2/users/{username}/flattrs";
+    my $uri = URI::Template->new($tmpl)->process(username => $arg->{username});
+    foreach (keys %$arg) {
+        $uri->query_param($_, $arg->{$_});
+    }
+
+    return $self->_req($uri);
+}
+
+=head3 things_owned_by
+
+Takes a list or hash reference containing the mandatory I<< username >>
+argument and zero or more optional arguments.
+
+L<<
+http://developers.flattr.net/api/resources/things/#list-a-users-things
+>>
+
+=cut
+
+sub things_owned_by {
+    my $self = shift;
+    my $arg = @_ == 1 ? shift : { @_ };
+
+    my $tmpl = "https://api.flattr.com/rest/v2/users/{username}/things";
     my $uri = URI::Template->new($tmpl)->process(username => $arg->{username});
     foreach (keys %$arg) {
         $uri->query_param($_, $arg->{$_});
@@ -129,6 +156,26 @@ sub get_thing {
 
     my $tmpl = "https://api.flattr.com/rest/v2/things/{id}";
     my $uri = URI::Template->new($tmpl)->process(id => $id);
+
+    return $self->_req($uri);
+}
+
+=head3 get_things
+
+Takes a list of IDs of things to retrieve.
+
+L<<
+http://developers.flattr.net/api/resources/things/#get-multiple-things
+>>
+
+=cut
+
+sub get_things {
+    my $self = shift;
+    my $ids = join ",", @_;
+
+    my $tmpl = "https://api.flattr.com/rest/v2/things?id={ids}";
+    my $uri = URI::Template->new($tmpl)->process(ids => $ids);
 
     return $self->_req($uri);
 }
@@ -246,14 +293,22 @@ sub languages {
 
 1;
 __END__
+=head1 SUPPORT
+
+Flattr request that you post questions about their API to StackOverflow.
+See L<< http://developers.flattr.net/api/questions/ >> for details.
+
+If you would like help using WebService::Flattr, please post there using
+the I<< flattr >> tag as they request and the I<< perl >> tag also.
+
 =head1 BUG REPORTS
 
 Please submit bug reports to L<<
 https://rt.cpan.org/Public/Dist/Display.html?Name=WebService-Flattr >>.
 
 If you would like to send patches, please send a git pull request to L<<
-bug-WebService-Flattr@rt.cpan.org >>.  Thank you in advance for your
-help.
+mailto:bug-WebService-Flattr@rt.cpan.org >>.  Thank you in advance for
+your help.
 
 =head1 SEE ALSO
 
