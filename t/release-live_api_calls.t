@@ -12,7 +12,7 @@ use strict;
 use warnings;
 
 # +1 for Test::NoWarnings
-use Test::More tests => 19 + 1;
+use Test::More tests => 22 + 1;
 use Test::NoWarnings;
 use WebService::Flattr ();
 
@@ -23,6 +23,16 @@ my $flattr = WebService::Flattr->new();
     # viewable flattrs.
     my $result = $flattr->user_flattrs({
         username => 'flattr',
+    })->data;
+    isa_ok $result, 'ARRAY', 'Expected result structure';
+    is $result->[0]{type}, 'flattr', 'Expected result type';
+    isa_ok $result->[0]{thing}, 'HASH', 'Expected result thing structure';
+}
+
+{
+    # This will fail if the thing has less than 1 flattr
+    my $result = $flattr->thing_flattrs({
+        id => 189147,
     })->data;
     isa_ok $result, 'ARRAY', 'Expected result structure';
     is $result->[0]{type}, 'flattr', 'Expected result type';

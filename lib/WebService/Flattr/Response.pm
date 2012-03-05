@@ -1,6 +1,6 @@
 package WebService::Flattr::Response;
 {
-  $WebService::Flattr::Response::VERSION = '0.52';
+  $WebService::Flattr::Response::VERSION = '0.53';
 }
 
 use strict;
@@ -12,7 +12,7 @@ WebService::Flattr::Response - Handles responses from WebService::Flattr
 
 =head1 VERSION
 
-version 0.52
+version 0.53
 
 =head1 DESCRIPTION
 

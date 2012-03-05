@@ -1,6 +1,6 @@
 package WebService::Flattr;
 {
-  $WebService::Flattr::VERSION = '0.52';
+  $WebService::Flattr::VERSION = '0.53';
 }
 
 use strict;
@@ -8,6 +8,7 @@ use warnings;
 
 use JSON 'decode_json';
 use LWP::UserAgent ();
+use URI ();
 use URI::QueryParam ();
 use URI::Template ();
 use WebService::Flattr::Response ();
@@ -18,7 +19,7 @@ WebService::Flattr - An interface to Flattr's social micro-payment API
 
 =head1 VERSION
 
-version 0.52
+version 0.53
 
 =head1 SYNOPSIS
 
@@ -47,7 +48,7 @@ Future versions will implement more features.
 
   my $flattr = WebService::Flattr->new();
 
-This returns a C<< Net::Flattr >> object to call L</Request Methods> on.
+This returns a C<< WebService::Flattr >> object to call L</Request Methods> on.
 
 =cut
 
@@ -118,6 +119,30 @@ sub user_flattrs {
     return $self->_req($uri);
 }
 
+=head3 thing_flattrs
+
+Takes a list or hash reference containing the mandatory I<< id >>
+argument and zero or more optional arguments.
+
+L<<
+http://developers.flattr.net/api/resources/flattrs/#list-a-things-flattrs
+>>
+
+=cut
+
+sub thing_flattrs {
+    my $self = shift;
+    my $arg = @_ == 1 ? shift : { @_ };
+
+    my $tmpl = "https://api.flattr.com/rest/v2/things/{id}/flattrs";
+    my $uri = URI::Template->new($tmpl)->process(id => $arg->{id});
+    foreach (keys %$arg) {
+        $uri->query_param($_, $arg->{$_});
+    }
+
+    return $self->_req($uri);
+}
+
 =head3 things_owned_by
 
 Takes a list or hash reference containing the mandatory I<< username >>
@@ -174,8 +199,7 @@ sub get_things {
     my $self = shift;
     my $ids = join ",", @_;
 
-    my $tmpl = "https://api.flattr.com/rest/v2/things?id={ids}";
-    my $uri = URI::Template->new($tmpl)->process(ids => $ids);
+    my $uri = URI->new("https://api.flattr.com/rest/v2/things/${ids}");
 
     return $self->_req($uri);
 }

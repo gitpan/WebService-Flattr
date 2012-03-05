@@ -1,6 +1,11 @@
 Revision history for WebService-Flattr
 
-0.52
+0.52 2012-03-05
+  - Add a thing_flattrs() query method
+  - Fix get_things() to deal with Flattr's incompatible change
+  - Fix a module's name in its documentation
+
+0.52 2012-02-05
   - Add things_owned_by() and get_things() query methods
   - Minor documentation improvements
 

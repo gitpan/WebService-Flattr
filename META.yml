@@ -23,4 +23,4 @@ requires:
 resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=WebService-Flattr
   repository: git://git.scrubhole.org/WebService-Flattr
-version: 0.52
+version: 0.53
