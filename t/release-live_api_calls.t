@@ -12,7 +12,7 @@ use strict;
 use warnings;
 
 # +1 for Test::NoWarnings
-use Test::More tests => 22 + 1;
+use Test::More tests => 29 + 1;
 use Test::NoWarnings;
 use WebService::Flattr ();
 
@@ -79,8 +79,27 @@ my $flattr = WebService::Flattr->new();
     like $result->{location}, qr/^http/, 'Expected location type';
 }
 
+{
+    my $result = $flattr->rate_limit->data;
+    isa_ok $result, 'HASH', 'Expected result structure';
+    cmp_ok $result->{hourly_limit}, '>', 10, 'Non miserly hourly limit';
+    # This will fail if the rate limits reset while this script runs
+    cmp_ok $result->{current_hits}, '>', 6, 'We already made requests';
+}
+
+{
+    my $result = $flattr->search_things({ tags => 'perl' })->data;
+    isa_ok $result, 'HASH', 'Expected result structure';
+    my $things = $result->{things};
+    isa_ok $things, 'ARRAY', 'Results in an array';
+    # These will fail if nothing exists tagged "perl"
+    like $things->[0]{id}, qr/^\d+$/, 'First result has a numeric ID';
+    my %tag;
+    $tag{$_} = 1 foreach @{ $things->[0]{tags} };
+    ok exists $tag{perl}, 'Searching for things tagged perl works';
+}
+
 # TODO:
-# - search_things
 # - user
 # - user_activities
 # - categories

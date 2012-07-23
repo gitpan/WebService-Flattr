@@ -29,7 +29,7 @@ my %WriteMakefileArgs = (
     "URI::QueryParam" => 0,
     "URI::Template" => 0
   },
-  "VERSION" => "0.53",
+  "VERSION" => "0.54",
   "test" => {
     "TESTS" => "t/*.t"
   }

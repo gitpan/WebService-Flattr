@@ -1,6 +1,6 @@
 package WebService::Flattr;
 {
-  $WebService::Flattr::VERSION = '0.53';
+  $WebService::Flattr::VERSION = '0.54';
 }
 
 use strict;
@@ -19,7 +19,7 @@ WebService::Flattr - An interface to Flattr's social micro-payment API
 
 =head1 VERSION
 
-version 0.53
+version 0.54
 
 =head1 SYNOPSIS
 
@@ -313,6 +313,20 @@ sub languages {
     my $self = shift;
 
     return $self->_req("https://api.flattr.com/rest/v2/languages");
+}
+
+=head3 rate_limit
+
+Takes no arguments.
+
+L<< http://developers.flattr.net/api/#rate-limiting >>
+
+=cut
+
+sub rate_limit {
+    my $self = shift;
+
+    return $self->_req("https://api.flattr.com/rest/v2/rate_limit");
 }
 
 1;

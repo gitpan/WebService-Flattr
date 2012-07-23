@@ -4,7 +4,7 @@
       "Tom Hukins <tom@eborcom.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300006, CPAN::Meta::Converter version 2.113640",
+   "generated_by" : "Dist::Zilla version 4.300020, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "perl_5"
    ],
@@ -22,16 +22,16 @@
       "runtime" : {
          "requires" : {
             "JSON" : "2",
-            "LWP::Protocol::https" : 0,
-            "LWP::UserAgent" : 0,
-            "URI::QueryParam" : 0,
-            "URI::Template" : 0
+            "LWP::Protocol::https" : "0",
+            "LWP::UserAgent" : "0",
+            "URI::QueryParam" : "0",
+            "URI::Template" : "0"
          }
       },
       "test" : {
          "requires" : {
-            "Test::More" : 0,
-            "Test::NoWarnings" : 0
+            "Test::More" : "0",
+            "Test::NoWarnings" : "0"
          }
       }
    },
@@ -46,6 +46,6 @@
          "url" : "git://git.scrubhole.org/WebService-Flattr"
       }
    },
-   "version" : "0.53"
+   "version" : "0.54"
 }
 
