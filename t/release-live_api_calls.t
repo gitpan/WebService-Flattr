@@ -12,7 +12,7 @@ use strict;
 use warnings;
 
 # +1 for Test::NoWarnings
-use Test::More tests => 29 + 1;
+use Test::More tests => 34 + 1;
 use Test::NoWarnings;
 use WebService::Flattr ();
 
@@ -53,10 +53,18 @@ my $flattr = WebService::Flattr->new();
 
 {
     # This will fail if the thing with ID 123 goes away
-    my $result = $flattr->get_thing(123)->data;
+    my $response = $flattr->get_thing(123);
+    my $result = $response->data;
     isa_ok $result, 'HASH', 'Expected result structure';
     is $result->{type}, 'thing', 'Expected result type';
     is $result->{id}, 123, 'Expected ID';
+
+    # Test rate limiting from a WebService::Flattr::Response object
+    cmp_ok $response->rate_limit, '>', 10, 'Non miserly hourly limit';
+    cmp_ok $response->limit_reset, '>', 1360678568, 'Sane timestamp';
+    like $response->rate_limit, qr/\A[0-9]+\z/, 'Numeric rate limit';
+    like $response->limit_remaining, qr/\A[0-9]+\z/, 'Numeric remaining';
+    like $response->limit_reset, qr/\A[0-9]+\z/, 'Numeric reset time';
 }
 
 {
@@ -72,14 +80,14 @@ my $flattr = WebService::Flattr->new();
 
 {
     # This will fail if the requested URL leaves Flattr's directory
-    my $result = $flattr->thing_exists('http://www.cyanogenmod.com/')
-        ->data;
+    my $result = $flattr->thing_exists('http://f-droid.org/')->data;
     isa_ok $result, 'HASH', 'Expected result structure';
     is $result->{message}, 'found', 'Expected result message';
     like $result->{location}, qr/^http/, 'Expected location type';
 }
 
 {
+    # Test the rate_limit() call
     my $result = $flattr->rate_limit->data;
     isa_ok $result, 'HASH', 'Expected result structure';
     cmp_ok $result->{hourly_limit}, '>', 10, 'Non miserly hourly limit';

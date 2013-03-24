@@ -1,6 +1,6 @@
 package WebService::Flattr::Response;
 {
-  $WebService::Flattr::Response::VERSION = '0.54';
+  $WebService::Flattr::Response::VERSION = '0.55';
 }
 
 use strict;
@@ -12,7 +12,7 @@ WebService::Flattr::Response - Handles responses from WebService::Flattr
 
 =head1 VERSION
 
-version 0.54
+version 0.55
 
 =head1 DESCRIPTION
 
@@ -73,6 +73,17 @@ http://developers.flattr.net/api/#rate-limiting >>.
 
 sub limit_remaining {
     shift->{response}->headers->header('X-RateLimit-Remaining');
+}
+
+=head2 limit_reset
+
+This returns a Unix timestamp defining when Flattr will reset your rate
+limit.  Flattr do not specify the timezone used by this field.
+
+=cut
+
+sub limit_reset {
+    shift->{response}->headers->header('X-RateLimit-Reset');
 }
 
 1;

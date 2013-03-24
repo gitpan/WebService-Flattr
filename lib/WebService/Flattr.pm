@@ -1,6 +1,6 @@
 package WebService::Flattr;
 {
-  $WebService::Flattr::VERSION = '0.54';
+  $WebService::Flattr::VERSION = '0.55';
 }
 
 use strict;
@@ -19,7 +19,7 @@ WebService::Flattr - An interface to Flattr's social micro-payment API
 
 =head1 VERSION
 
-version 0.54
+version 0.55
 
 =head1 SYNOPSIS
 
